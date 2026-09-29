@@ -1,0 +1,381 @@
+const STORAGE_KEYS = {
+  products: 'sweet-scoop-products',
+  cart: 'sweet-scoop-cart',
+  orders: 'sweet-scoop-orders'
+};
+
+const defaultProducts = [
+  {
+    id: 'p1',
+    name: 'Cookie Crunch',
+    flavor: 'Cookie Dough',
+    category: 'Classic',
+    price: 9.5,
+    stock: 25,
+    description: 'Velvety vanilla ice cream loaded with chocolate cookie dough bites.',
+    image: 'https://images.unsplash.com/photo-1570197788417-0e823ef4b1d4?auto=format&fit=crop&w=900&q=80'
+  },
+  {
+    id: 'p2',
+    name: 'Berry Bloom',
+    flavor: 'Strawberry',
+    category: 'Premium',
+    price: 10.5,
+    stock: 18,
+    description: 'Fresh strawberry swirls with a silky cream finish and berry notes.',
+    image: 'https://images.unsplash.com/photo-1563805042-7684c019e1cb?auto=format&fit=crop&w=900&q=80'
+  },
+  {
+    id: 'p3',
+    name: 'Midnight Cocoa',
+    flavor: 'Chocolate',
+    category: 'Classic',
+    price: 9.0,
+    stock: 30,
+    description: 'Dark chocolate indulgence with smooth cocoa richness and a soft finish.',
+    image: 'https://images.unsplash.com/photo-1551024601-bec78aea704b?auto=format&fit=crop&w=900&q=80'
+  },
+  {
+    id: 'p4',
+    name: 'Mint Whirl',
+    flavor: 'Mint',
+    category: 'Vegan',
+    price: 11.0,
+    stock: 14,
+    description: 'Cool mint freshness with genuine cacao ribbons and a dairy-free texture.',
+    image: 'https://images.unsplash.com/photo-1626082927389-6cd097cdc6ec?auto=format&fit=crop&w=900&q=80'
+  },
+  {
+    id: 'p5',
+    name: 'Salted Caramel',
+    flavor: 'Caramel',
+    category: 'Premium',
+    price: 10.75,
+    stock: 17,
+    description: 'A buttery base layered with decadent caramel ribbons and sea salt.',
+    image: 'https://images.unsplash.com/photo-1551024709-8f23befc6f87?auto=format&fit=crop&w=900&q=80'
+  },
+  {
+    id: 'p6',
+    name: 'Sunset Swirl',
+    flavor: 'Cotton Candy',
+    category: 'Seasonal',
+    price: 12.5,
+    stock: 12,
+    description: 'A bright, playful twist packed with sugar-cloud flavor and cheerful color.',
+    image: 'https://images.unsplash.com/photo-1571091718767-18b5b1457add?auto=format&fit=crop&w=900&q=80'
+  },
+  {
+    id: 'p7',
+    name: 'Pistachio Velvet',
+    flavor: 'Pistachio',
+    category: 'Low-Fat',
+    price: 10.25,
+    stock: 16,
+    description: 'Nutty and creamy with a delicate finish and a naturally elegant texture.',
+    image: 'https://images.unsplash.com/photo-1473093295043-cdd812d0e601?auto=format&fit=crop&w=900&q=80'
+  },
+  {
+    id: 'p8',
+    name: 'Rocky Road',
+    flavor: 'Rocky Road',
+    category: 'Classic',
+    price: 10.0,
+    stock: 22,
+    description: 'Chocolate base with marshmallow, almond, and fudge for a classic treat.',
+    image: 'https://images.unsplash.com/photo-1560008581-09826d1de69e?auto=format&fit=crop&w=900&q=80'
+  }
+];
+
+const state = {
+  selectedCategory: 'All',
+  search: ''
+};
+
+function seedProducts() {
+  const stored = localStorage.getItem(STORAGE_KEYS.products);
+  if (!stored) {
+    localStorage.setItem(STORAGE_KEYS.products, JSON.stringify(defaultProducts));
+  }
+}
+
+function getProducts() {
+  const stored = localStorage.getItem(STORAGE_KEYS.products);
+  return stored ? JSON.parse(stored) : defaultProducts;
+}
+
+function saveProducts(products) {
+  localStorage.setItem(STORAGE_KEYS.products, JSON.stringify(products));
+}
+
+function getCart() {
+  const stored = localStorage.getItem(STORAGE_KEYS.cart);
+  return stored ? JSON.parse(stored) : [];
+}
+
+function saveCart(items) {
+  localStorage.setItem(STORAGE_KEYS.cart, JSON.stringify(items));
+}
+
+function getOrders() {
+  const stored = localStorage.getItem(STORAGE_KEYS.orders);
+  return stored ? JSON.parse(stored) : [];
+}
+
+function saveOrders(orders) {
+  localStorage.setItem(STORAGE_KEYS.orders, JSON.stringify(orders));
+}
+
+function formatCurrency(value) {
+  return new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'USD'
+  }).format(value);
+}
+
+function showToast(message) {
+  const toast = document.getElementById('toast');
+  if (!toast) return;
+
+  toast.textContent = message;
+  toast.classList.add('show');
+  setTimeout(() => toast.classList.remove('show'), 2200);
+}
+
+function renderCategoryFilters() {
+  const filters = document.getElementById('categoryFilters');
+  if (!filters) return;
+
+  const categories = ['All', ...new Set(getProducts().map((product) => product.category))];
+
+  filters.innerHTML = categories
+    .map(
+      (category) => `
+        <button class="filter-btn ${state.selectedCategory === category ? 'active' : ''}" type="button" data-category="${category}">
+          ${category}
+        </button>
+      `
+    )
+    .join('');
+
+  filters.querySelectorAll('.filter-btn').forEach((button) => {
+    button.addEventListener('click', () => {
+      state.selectedCategory = button.dataset.category;
+      renderProducts();
+      renderCategoryFilters();
+    });
+  });
+}
+
+function getFilteredProducts() {
+  return getProducts().filter((product) => {
+    const matchCategory = state.selectedCategory === 'All' || product.category === state.selectedCategory;
+    const query = state.search.trim().toLowerCase();
+    const matchSearch = !query || [product.name, product.flavor, product.category].some((field) => field.toLowerCase().includes(query));
+    return matchCategory && matchSearch;
+  });
+}
+
+function renderProducts() {
+  const grid = document.getElementById('productGrid');
+  if (!grid) return;
+
+  const products = getFilteredProducts();
+
+  if (!products.length) {
+    grid.innerHTML = '<div class="empty-state">No flavors match your search.</div>';
+    return;
+  }
+
+  grid.innerHTML = products
+    .map(
+      (product) => `
+        <article class="product-card">
+          <div class="product-image"><span style="background: linear-gradient(135deg, ${product.flavor === 'Chocolate' ? '#d6b29c' : product.flavor === 'Strawberry' ? '#ffb5c7' : product.flavor === 'Mint' ? '#b8f0d5' : product.flavor === 'Caramel' ? '#f4d39c' : product.flavor === 'Pistachio' ? '#d4f1d2' : '#ffd3c9'} 0%, ${product.flavor === 'Chocolate' ? '#9e5a3b' : product.flavor === 'Strawberry' ? '#ff7ca7' : product.flavor === 'Mint' ? '#5fc89a' : product.flavor === 'Caramel' ? '#d79d4d' : product.flavor === 'Pistachio' ? '#67b76d' : '#ff8da6'} 100%);"></span></div>
+          <div class="product-card-body">
+            <div class="product-topline">
+              <h3>${product.name}</h3>
+              <span class="product-price">${formatCurrency(product.price)}</span>
+            </div>
+            <div class="product-meta">
+              <span>${product.flavor}</span>
+              <span>${product.stock} in stock</span>
+            </div>
+            <p>${product.description}</p>
+            <button type="button" data-product-id="${product.id}">Add to cart</button>
+          </div>
+        </article>
+      `
+    )
+    .join('');
+
+  grid.querySelectorAll('button[data-product-id]').forEach((button) => {
+    button.addEventListener('click', () => addToCart(button.dataset.productId));
+  });
+}
+
+function addToCart(productId) {
+  const cart = getCart();
+  const existingItem = cart.find((item) => item.id === productId);
+
+  if (existingItem) {
+    existingItem.quantity += 1;
+  } else {
+    const product = getProducts().find((item) => item.id === productId);
+    if (!product) return;
+
+    cart.push({
+      id: product.id,
+      name: product.name,
+      flavor: product.flavor,
+      price: product.price,
+      quantity: 1,
+      image: product.image
+    });
+  }
+
+  saveCart(cart);
+  renderCart();
+  showToast('Added to cart');
+}
+
+function updateCartQuantity(productId, delta) {
+  const cart = getCart();
+  const item = cart.find((entry) => entry.id === productId);
+
+  if (!item) return;
+
+  item.quantity += delta;
+  if (item.quantity <= 0) {
+    const filtered = cart.filter((entry) => entry.id !== productId);
+    saveCart(filtered);
+    renderCart();
+    return;
+  }
+
+  saveCart(cart);
+  renderCart();
+}
+
+function renderCart() {
+  const cartItems = document.getElementById('cartItems');
+  const cartCount = document.getElementById('cartCount');
+  const subtotalValue = document.getElementById('subtotalValue');
+  const shippingValue = document.getElementById('shippingValue');
+  const totalValue = document.getElementById('totalValue');
+
+  if (!cartItems || !cartCount || !subtotalValue || !shippingValue || !totalValue) return;
+
+  const cart = getCart();
+  cartCount.textContent = String(cart.reduce((sum, item) => sum + item.quantity, 0));
+
+  if (!cart.length) {
+    cartItems.innerHTML = '<p class="empty-cart">Your cart is empty.</p>';
+    subtotalValue.textContent = formatCurrency(0);
+    shippingValue.textContent = formatCurrency(0);
+    totalValue.textContent = formatCurrency(0);
+    return;
+  }
+
+  const subtotal = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
+  const shipping = subtotal > 50 ? 0 : 6;
+  const total = subtotal + shipping;
+
+  cartItems.innerHTML = cart
+    .map(
+      (item) => `
+        <div class="cart-item">
+          <div class="cart-item-thumb"><span></span></div>
+          <div>
+            <h4>${item.name}</h4>
+            <small>${item.flavor}</small>
+            <div class="qty-controls">
+              <button type="button" data-action="decrease" data-id="${item.id}">-</button>
+              <span>${item.quantity}</span>
+              <button type="button" data-action="increase" data-id="${item.id}">+</button>
+            </div>
+          </div>
+          <div class="item-price">${formatCurrency(item.price * item.quantity)}</div>
+        </div>
+      `
+    )
+    .join('');
+
+  subtotalValue.textContent = formatCurrency(subtotal);
+  shippingValue.textContent = formatCurrency(shipping);
+  totalValue.textContent = formatCurrency(total);
+
+  cartItems.querySelectorAll('[data-action]').forEach((button) => {
+    button.addEventListener('click', () => {
+      const delta = button.dataset.action === 'increase' ? 1 : -1;
+      updateCartQuantity(button.dataset.id, delta);
+    });
+  });
+}
+
+function openCart() {
+  document.getElementById('cartPanel')?.classList.add('open');
+}
+
+function closeCart() {
+  document.getElementById('cartPanel')?.classList.remove('open');
+}
+
+function handleCheckout(event) {
+  event.preventDefault();
+  const cart = getCart();
+  if (!cart.length) {
+    showToast('Your cart is empty');
+    return;
+  }
+
+  const form = event.target;
+  const formData = new FormData(form);
+  const order = {
+    id: `ord-${Date.now()}`,
+    date: new Date().toISOString(),
+    customer: {
+      firstName: formData.get('firstName'),
+      lastName: formData.get('lastName'),
+      email: formData.get('email'),
+      address: formData.get('address'),
+      city: formData.get('city'),
+      zip: formData.get('zip')
+    },
+    paymentMethod: formData.get('paymentMethod'),
+    items: cart,
+    total: cart.reduce((sum, item) => sum + item.price * item.quantity, 0) + (cart.reduce((sum, item) => sum + item.price * item.quantity, 0) > 50 ? 0 : 6)
+  };
+
+  const orders = getOrders();
+  orders.push(order);
+  saveOrders(orders);
+
+  localStorage.removeItem(STORAGE_KEYS.cart);
+  form.reset();
+  renderCart();
+  closeCart();
+  showToast('Order placed successfully');
+}
+
+function initHomepage() {
+  seedProducts();
+  renderCategoryFilters();
+  renderProducts();
+  renderCart();
+
+  const searchInput = document.getElementById('searchInput');
+  if (searchInput) {
+    searchInput.addEventListener('input', (event) => {
+      state.search = event.target.value;
+      renderProducts();
+    });
+  }
+
+  document.querySelector('.cart-button')?.addEventListener('click', openCart);
+  document.getElementById('closeCart')?.addEventListener('click', closeCart);
+  document.getElementById('checkoutForm')?.addEventListener('submit', handleCheckout);
+}
+
+window.addEventListener('DOMContentLoaded', initHomepage);
+

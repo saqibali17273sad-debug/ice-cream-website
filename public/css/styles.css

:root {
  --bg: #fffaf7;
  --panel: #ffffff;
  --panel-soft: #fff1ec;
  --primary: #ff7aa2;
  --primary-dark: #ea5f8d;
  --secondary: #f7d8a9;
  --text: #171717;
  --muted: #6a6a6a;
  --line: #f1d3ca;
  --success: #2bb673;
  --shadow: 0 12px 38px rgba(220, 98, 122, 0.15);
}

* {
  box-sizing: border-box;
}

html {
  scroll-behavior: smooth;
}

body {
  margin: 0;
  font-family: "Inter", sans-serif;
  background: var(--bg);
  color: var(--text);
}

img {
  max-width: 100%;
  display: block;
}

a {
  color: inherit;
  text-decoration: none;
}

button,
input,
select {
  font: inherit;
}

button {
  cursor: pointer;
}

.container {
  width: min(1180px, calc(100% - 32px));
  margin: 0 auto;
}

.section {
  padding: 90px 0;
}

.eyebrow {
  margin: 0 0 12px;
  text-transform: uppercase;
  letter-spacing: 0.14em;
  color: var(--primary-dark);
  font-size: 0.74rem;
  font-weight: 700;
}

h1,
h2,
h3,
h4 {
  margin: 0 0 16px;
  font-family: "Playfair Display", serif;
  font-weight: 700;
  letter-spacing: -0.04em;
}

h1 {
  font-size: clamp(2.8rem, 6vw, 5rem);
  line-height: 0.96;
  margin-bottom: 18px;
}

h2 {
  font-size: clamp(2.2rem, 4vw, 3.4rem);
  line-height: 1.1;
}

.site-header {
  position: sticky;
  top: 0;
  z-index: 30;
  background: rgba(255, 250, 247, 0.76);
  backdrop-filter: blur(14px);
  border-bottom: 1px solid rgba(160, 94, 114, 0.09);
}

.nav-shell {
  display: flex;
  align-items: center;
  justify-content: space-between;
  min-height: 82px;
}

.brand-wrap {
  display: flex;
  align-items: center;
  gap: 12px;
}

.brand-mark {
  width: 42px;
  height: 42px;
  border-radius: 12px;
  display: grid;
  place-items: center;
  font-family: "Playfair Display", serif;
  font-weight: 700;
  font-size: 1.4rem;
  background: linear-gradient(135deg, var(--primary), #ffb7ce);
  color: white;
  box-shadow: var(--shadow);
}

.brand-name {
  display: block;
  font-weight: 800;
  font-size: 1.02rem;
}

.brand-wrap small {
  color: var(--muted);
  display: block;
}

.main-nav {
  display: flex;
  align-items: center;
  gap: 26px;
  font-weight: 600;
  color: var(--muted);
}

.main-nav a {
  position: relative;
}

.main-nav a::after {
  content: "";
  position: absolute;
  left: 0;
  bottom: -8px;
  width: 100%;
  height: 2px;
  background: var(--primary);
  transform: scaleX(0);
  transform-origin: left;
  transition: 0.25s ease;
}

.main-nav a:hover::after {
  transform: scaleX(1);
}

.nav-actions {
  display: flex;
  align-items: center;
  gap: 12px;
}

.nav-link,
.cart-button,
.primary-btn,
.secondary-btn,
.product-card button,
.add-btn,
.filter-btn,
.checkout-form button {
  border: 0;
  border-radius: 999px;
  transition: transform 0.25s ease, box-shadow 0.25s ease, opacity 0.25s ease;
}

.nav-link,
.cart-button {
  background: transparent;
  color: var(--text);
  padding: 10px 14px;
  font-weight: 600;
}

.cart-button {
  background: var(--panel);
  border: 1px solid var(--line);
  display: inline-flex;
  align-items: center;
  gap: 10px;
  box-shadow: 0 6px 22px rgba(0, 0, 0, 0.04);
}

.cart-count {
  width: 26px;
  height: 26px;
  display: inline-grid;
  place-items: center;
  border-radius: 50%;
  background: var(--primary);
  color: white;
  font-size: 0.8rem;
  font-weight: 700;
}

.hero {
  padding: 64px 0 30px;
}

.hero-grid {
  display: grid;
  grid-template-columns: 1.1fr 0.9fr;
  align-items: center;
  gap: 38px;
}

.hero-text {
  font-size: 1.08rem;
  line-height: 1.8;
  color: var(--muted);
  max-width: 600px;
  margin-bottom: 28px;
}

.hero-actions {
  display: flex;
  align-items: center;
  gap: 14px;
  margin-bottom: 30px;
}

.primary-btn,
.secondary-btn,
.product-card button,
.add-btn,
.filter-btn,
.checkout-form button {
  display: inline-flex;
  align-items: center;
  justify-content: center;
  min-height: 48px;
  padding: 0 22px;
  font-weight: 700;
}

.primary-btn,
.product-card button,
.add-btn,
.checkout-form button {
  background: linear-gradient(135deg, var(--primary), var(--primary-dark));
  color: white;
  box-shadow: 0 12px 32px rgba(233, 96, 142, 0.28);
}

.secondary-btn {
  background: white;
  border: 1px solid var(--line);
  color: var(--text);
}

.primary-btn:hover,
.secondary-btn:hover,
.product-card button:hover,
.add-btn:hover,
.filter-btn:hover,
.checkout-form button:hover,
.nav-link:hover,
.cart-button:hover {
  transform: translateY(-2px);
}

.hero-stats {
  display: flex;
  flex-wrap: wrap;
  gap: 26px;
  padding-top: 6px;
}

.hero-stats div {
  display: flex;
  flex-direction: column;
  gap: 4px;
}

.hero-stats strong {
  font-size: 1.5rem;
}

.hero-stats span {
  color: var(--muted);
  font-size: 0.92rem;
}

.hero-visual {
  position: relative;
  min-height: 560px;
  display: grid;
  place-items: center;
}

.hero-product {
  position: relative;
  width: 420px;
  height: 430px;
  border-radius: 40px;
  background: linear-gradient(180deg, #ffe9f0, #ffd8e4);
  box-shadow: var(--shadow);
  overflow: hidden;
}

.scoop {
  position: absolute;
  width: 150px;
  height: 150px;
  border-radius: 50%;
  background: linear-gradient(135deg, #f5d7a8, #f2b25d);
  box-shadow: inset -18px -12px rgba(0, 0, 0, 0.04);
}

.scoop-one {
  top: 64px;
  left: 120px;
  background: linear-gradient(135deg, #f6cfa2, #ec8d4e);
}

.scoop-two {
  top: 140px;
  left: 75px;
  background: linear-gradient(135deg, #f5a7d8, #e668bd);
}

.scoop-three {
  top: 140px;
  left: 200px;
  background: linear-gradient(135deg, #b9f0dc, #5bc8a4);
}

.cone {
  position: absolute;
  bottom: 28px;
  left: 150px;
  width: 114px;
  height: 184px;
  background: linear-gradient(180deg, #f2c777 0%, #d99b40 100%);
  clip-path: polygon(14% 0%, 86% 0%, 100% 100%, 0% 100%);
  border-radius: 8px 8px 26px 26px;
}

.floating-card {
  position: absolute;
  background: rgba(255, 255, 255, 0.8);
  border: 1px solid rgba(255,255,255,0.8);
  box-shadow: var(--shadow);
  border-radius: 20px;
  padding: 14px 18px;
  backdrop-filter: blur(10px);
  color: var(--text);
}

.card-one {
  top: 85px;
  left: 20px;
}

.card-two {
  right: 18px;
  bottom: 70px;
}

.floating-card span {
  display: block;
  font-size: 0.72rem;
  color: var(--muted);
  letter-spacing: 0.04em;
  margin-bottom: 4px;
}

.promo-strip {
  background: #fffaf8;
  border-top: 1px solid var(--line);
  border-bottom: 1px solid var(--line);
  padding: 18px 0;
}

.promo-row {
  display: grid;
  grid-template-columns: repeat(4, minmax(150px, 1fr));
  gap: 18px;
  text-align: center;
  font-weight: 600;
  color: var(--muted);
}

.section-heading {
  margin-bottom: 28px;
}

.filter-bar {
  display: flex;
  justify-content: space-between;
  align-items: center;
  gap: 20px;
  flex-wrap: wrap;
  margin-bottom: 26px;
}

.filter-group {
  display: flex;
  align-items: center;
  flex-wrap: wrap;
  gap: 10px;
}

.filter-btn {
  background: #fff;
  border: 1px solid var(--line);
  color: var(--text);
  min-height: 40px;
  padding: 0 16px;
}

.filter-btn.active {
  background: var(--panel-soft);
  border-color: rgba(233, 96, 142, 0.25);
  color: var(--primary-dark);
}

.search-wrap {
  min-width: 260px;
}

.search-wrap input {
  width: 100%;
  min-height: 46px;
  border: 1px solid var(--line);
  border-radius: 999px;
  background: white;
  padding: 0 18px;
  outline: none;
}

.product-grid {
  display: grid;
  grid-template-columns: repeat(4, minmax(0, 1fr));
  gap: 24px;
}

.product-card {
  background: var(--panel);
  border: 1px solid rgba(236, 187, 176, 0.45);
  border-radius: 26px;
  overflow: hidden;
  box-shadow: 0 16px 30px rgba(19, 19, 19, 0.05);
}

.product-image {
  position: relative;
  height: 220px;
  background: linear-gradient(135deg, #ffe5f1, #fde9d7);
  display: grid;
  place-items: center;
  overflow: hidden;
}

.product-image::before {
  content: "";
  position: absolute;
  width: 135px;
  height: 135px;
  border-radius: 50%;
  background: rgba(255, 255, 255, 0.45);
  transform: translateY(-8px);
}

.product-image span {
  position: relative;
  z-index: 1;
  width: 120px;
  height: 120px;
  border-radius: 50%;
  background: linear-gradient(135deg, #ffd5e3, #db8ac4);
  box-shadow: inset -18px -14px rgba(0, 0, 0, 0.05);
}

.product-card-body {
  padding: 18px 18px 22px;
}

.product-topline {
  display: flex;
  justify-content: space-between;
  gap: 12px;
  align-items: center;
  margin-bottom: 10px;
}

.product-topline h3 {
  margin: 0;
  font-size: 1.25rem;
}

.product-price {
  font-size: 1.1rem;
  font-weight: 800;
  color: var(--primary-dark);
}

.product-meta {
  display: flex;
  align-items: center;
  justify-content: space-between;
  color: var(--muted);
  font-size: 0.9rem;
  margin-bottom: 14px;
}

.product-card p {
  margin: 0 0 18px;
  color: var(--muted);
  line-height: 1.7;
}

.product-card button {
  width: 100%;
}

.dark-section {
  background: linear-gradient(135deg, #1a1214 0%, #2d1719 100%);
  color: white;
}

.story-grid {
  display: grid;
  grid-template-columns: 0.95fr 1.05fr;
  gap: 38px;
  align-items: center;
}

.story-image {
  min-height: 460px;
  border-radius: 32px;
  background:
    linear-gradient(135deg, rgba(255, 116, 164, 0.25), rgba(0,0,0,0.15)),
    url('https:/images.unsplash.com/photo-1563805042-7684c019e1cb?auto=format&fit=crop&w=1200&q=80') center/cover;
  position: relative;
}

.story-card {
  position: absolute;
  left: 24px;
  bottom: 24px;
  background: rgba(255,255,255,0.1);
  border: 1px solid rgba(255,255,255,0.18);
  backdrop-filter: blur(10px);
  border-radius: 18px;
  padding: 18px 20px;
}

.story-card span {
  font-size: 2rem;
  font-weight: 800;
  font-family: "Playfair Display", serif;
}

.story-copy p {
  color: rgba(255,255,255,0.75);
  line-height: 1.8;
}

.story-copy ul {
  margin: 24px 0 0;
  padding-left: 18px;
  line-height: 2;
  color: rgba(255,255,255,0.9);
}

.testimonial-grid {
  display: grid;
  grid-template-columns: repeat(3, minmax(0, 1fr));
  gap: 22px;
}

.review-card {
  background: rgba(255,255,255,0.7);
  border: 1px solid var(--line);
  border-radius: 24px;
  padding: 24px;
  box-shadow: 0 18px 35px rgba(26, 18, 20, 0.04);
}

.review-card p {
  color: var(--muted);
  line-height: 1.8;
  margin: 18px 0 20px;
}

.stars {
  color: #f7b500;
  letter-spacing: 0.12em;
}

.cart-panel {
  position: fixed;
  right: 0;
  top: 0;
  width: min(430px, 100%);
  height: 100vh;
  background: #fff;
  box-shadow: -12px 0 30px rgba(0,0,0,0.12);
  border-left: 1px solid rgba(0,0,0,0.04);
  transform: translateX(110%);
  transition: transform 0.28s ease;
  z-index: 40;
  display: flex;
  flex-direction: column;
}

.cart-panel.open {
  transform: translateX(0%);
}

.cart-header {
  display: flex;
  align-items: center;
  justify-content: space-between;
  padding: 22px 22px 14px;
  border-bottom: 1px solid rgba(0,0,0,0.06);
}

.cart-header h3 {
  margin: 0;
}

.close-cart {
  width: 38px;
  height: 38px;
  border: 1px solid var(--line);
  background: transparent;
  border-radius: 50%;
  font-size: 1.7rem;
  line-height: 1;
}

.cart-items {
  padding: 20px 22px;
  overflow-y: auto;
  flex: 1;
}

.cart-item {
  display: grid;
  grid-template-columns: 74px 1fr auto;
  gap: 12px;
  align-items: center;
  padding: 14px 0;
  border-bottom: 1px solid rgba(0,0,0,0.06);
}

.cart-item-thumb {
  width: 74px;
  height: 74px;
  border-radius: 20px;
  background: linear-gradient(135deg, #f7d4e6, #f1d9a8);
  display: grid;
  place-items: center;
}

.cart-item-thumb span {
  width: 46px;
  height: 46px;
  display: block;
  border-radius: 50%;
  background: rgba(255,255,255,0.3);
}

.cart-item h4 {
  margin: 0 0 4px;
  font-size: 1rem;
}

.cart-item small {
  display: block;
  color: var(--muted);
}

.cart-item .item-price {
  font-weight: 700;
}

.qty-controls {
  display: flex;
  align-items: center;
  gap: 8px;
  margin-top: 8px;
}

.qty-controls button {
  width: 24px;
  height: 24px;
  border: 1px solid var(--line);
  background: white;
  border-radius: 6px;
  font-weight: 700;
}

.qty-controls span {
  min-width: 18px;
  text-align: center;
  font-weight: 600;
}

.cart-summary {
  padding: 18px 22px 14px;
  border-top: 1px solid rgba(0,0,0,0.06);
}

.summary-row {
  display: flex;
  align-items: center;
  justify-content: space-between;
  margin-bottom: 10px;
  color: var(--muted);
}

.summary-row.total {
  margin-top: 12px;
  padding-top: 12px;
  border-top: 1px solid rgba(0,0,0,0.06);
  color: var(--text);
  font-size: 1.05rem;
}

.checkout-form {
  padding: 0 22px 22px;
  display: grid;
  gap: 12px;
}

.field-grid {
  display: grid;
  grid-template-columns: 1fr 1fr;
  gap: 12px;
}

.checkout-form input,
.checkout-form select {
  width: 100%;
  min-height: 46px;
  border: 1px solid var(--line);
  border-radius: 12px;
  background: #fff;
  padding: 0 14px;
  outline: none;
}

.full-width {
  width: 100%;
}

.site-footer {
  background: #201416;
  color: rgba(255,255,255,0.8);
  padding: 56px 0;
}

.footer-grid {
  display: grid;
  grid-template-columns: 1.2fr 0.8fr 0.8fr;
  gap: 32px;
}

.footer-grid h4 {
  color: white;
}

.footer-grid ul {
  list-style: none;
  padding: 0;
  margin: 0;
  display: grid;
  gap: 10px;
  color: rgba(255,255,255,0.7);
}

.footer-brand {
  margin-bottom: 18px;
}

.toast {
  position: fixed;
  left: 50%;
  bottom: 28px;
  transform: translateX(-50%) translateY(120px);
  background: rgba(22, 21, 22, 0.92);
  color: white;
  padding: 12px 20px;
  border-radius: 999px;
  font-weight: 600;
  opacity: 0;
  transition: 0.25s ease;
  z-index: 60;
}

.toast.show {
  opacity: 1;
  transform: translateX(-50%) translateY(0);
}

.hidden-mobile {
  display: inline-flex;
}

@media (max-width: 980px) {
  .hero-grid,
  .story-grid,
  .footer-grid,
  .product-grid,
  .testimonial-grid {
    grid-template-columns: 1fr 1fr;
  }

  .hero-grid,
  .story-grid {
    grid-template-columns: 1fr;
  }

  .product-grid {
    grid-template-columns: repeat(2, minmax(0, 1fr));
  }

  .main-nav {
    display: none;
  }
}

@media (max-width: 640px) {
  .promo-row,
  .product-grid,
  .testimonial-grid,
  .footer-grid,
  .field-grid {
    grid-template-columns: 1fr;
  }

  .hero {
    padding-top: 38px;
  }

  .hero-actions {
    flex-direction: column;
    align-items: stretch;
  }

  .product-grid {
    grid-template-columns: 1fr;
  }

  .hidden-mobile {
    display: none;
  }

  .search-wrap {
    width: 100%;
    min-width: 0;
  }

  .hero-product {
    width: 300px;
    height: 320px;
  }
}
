@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sweet Scoop | Premium Ice Cream</title>
+    <meta name="description" content="Premium ice cream brand featuring handcrafted flavors, desserts, and delivery." />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="./css/styles.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="container nav-shell">
+        <div class="brand-wrap">
+          <div class="brand-mark">S</div>
+          <div>
+            <span class="brand-name">Sweet Scoop</span>
+            <small>Artisan Ice Cream</small>
+          </div>
+        </div>
+
+        <nav class="main-nav">
+          <a href="#flavors">Flavors</a>
+          <a href="#about">About</a>
+          <a href="#reviews">Reviews</a>
+          <a href="#contact">Contact</a>
+        </nav>
+
+        <div class="nav-actions">
+          <button class="nav-link hidden-mobile" type="button">Login</button>
+          <button class="cart-button" type="button" aria-label="View cart">
+            <span>Cart</span>
+            <span class="cart-count" id="cartCount">0</span>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <section class="hero">
+        <div class="container hero-grid">
+          <div class="hero-copy">
+            <p class="eyebrow">Freshly churned every day</p>
+            <h1>Cold, creamy joy in every scoop.</h1>
+            <p class="hero-text">
+              Discover handcrafted ice cream made with premium ingredients, bold flavors,
+              and the kind of texture that keeps customers coming back for more.
+            </p>
+            <div class="hero-actions">
+              <a class="primary-btn" href="#flavors">Shop Flavors</a>
+              <a class="secondary-btn" href="#about">Our Story</a>
+            </div>
+
+            <div class="hero-stats">
+              <div>
+                <strong>12k+</strong>
+                <span>Scoops served</span>
+              </div>
+              <div>
+                <strong>4.9/5</strong>
+                <span>Customer rating</span>
+              </div>
+              <div>
+                <strong>30 min</strong>
+                <span>Fast delivery</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="hero-visual">
+            <div class="floating-card card-one">
+              <span>Best seller</span>
+              <strong>Cookie Crunch</strong>
+            </div>
+            <div class="floating-card card-two">
+              <span>Today’s special</span>
+              <strong>Strawberry Cloud</strong>
+            </div>
+            <div class="hero-product">
+              <div class="scoop scoop-one"></div>
+              <div class="scoop scoop-two"></div>
+              <div class="scoop scoop-three"></div>
+              <div class="cone"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="promo-strip">
+        <div class="container promo-row">
+          <div>100% natural ingredients</div>
+          <div>Chef-crafted flavors</div>
+          <div>Free shipping above $50</div>
+          <div>Same-day delivery</div>
+        </div>
+      </section>
+
+      <section class="section" id="flavors">
+        <div class="container">
+          <div class="section-heading">
+            <p class="eyebrow">Our menu</p>
+            <h2>Signature flavors loved by everyone</h2>
+          </div>
+
+          <div class="filter-bar">
+            <div class="filter-group" id="categoryFilters"></div>
+            <div class="search-wrap">
+              <input id="searchInput" type="search" placeholder="Search flavors..." />
+            </div>
+          </div>
+
+          <div class="product-grid" id="productGrid"></div>
+        </div>
+      </section>
+
+      <section class="section dark-section" id="about">
+        <div class="container story-grid">
+          <div class="story-image">
+            <div class="story-card">
+              <span>Since 2010</span>
+            </div>
+          </div>
+
+          <div class="story-copy">
+            <p class="eyebrow">Our story</p>
+            <h2>Crafting creamy happiness in every batch.</h2>
+            <p>
+              At Sweet Scoop, we blend premium dairy, seasonal fruit, and thoughtfully sourced
+              ingredients to create indulgent flavors with a homemade soul. Every batch is churned in
+              small quantities to preserve texture, richness, and taste.
+            </p>
+            <ul>
+              <li>Small-batch production</li>
+              <li>Fresh local ingredients</li>
+              <li>Vegan and low-sugar options</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="reviews">
+        <div class="container">
+          <div class="section-heading">
+            <p class="eyebrow">Testimonials</p>
+            <h2>What our customers say</h2>
+          </div>
+
+          <div class="testimonial-grid">
+            <article class="review-card">
+              <div class="stars">★★★★★</div>
+              <p>
+                “The pistachio gelato tasted incredible and the packaging felt premium. Our order arrived
+                perfectly chilled.”
+              </p>
+              <strong>— Maria L.</strong>
+            </article>
+
+            <article class="review-card">
+              <div class="stars">★★★★★</div>
+              <p>
+                “Beautiful product selection and a clean menu. My family loved the Cookie Dough and Rocky
+                Road flavors.”
+              </p>
+              <strong>— Jamal H.</strong>
+            </article>
+
+            <article class="review-card">
+              <div class="stars">★★★★★</div>
+              <p>
+                “Sweet Scoop feels like a boutique dessert studio. The quality matches the branding and the
+                service is amazing.”
+              </p>
+              <strong>— Erica P.</strong>
+            </article>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <aside class="cart-panel" id="cartPanel" aria-label="Shopping cart">
+      <div class="cart-header">
+        <h3>Your Cart</h3>
+        <button class="close-cart" id="closeCart" type="button">×</button>
+      </div>
+
+      <div class="cart-items" id="cartItems"></div>
+
+      <div class="cart-summary">
+        <div class="summary-row"><span>Subtotal</span><strong id="subtotalValue">$0.00</strong></div>
+        <div class="summary-row"><span>Shipping</span><strong id="shippingValue">$0.00</strong></div>
+        <div class="summary-row total"><span>Total</span><strong id="totalValue">$0.00</strong></div>
+      </div>
+
+      <form id="checkoutForm" class="checkout-form">
+        <div class="field-grid">
+          <input type="text" name="firstName" placeholder="First name" required />
+          <input type="text" name="lastName" placeholder="Last name" required />
+        </div>
+        <input type="email" name="email" placeholder="Email address" required />
+        <input type="text" name="address" placeholder="Street address" required />
+        <div class="field-grid">
+          <input type="text" name="city" placeholder="City" required />
+          <input type="text" name="zip" placeholder="ZIP code" required />
+        </div>
+        <select name="paymentMethod" required>
+          <option value="">Payment method</option>
+          <option value="Credit Card">Credit Card</option>
+          <option value="Debit Card">Debit Card</option>
+          <option value="PayPal">PayPal</option>
+        </select>
+        <button type="submit" class="primary-btn full-width">Checkout</button>
+      </form>
+    </aside>
+
+    <footer class="site-footer" id="contact">
+      <div class="container footer-grid">
+        <div>
+          <div class="brand-wrap footer-brand">
+            <div class="brand-mark">S</div>
+            <div>
+              <span class="brand-name">Sweet Scoop</span>
+              <small>Artisan Ice Cream</small>
+            </div>
+          </div>
+          <p>We create premium, handcrafted desserts designed for everyday indulgence.</p>
+        </div>
+
+        <div>
+          <h4>Visit</h4>
+          <ul>
+            <li>24 Ocean Avenue</li>
+            <li>Los Angeles, CA</li>
+            <li>hello@sweetscoop.com</li>
+          </ul>
+        </div>
+
+        <div>
+          <h4>Hours</h4>
+          <ul>
+            <li>Mon - Fri: 11am - 10pm</li>
+            <li>Sat - Sun: 10am - 11pm</li>
+            <li>Orders: 24/7 online</li>
+          </ul>
+        </div>
+      </div>
+    </footer>
+
+    <div class="toast" id="toast"></div>
+
+    <script src="./js/app.js"></script>
+  </body>
+</html>
+
